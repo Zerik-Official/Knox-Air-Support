@@ -1,0 +1,8 @@
+name=Knox Air Support
+id=KnoxAirSupport
+author=Zerik
+modversion=0.1
+versionMin=42.0.0
+poster=poster.png
+icon=icon.png
+description=Periodic supply drops with guardian NPCs, event-driven airdrop system.
