@@ -1,0 +1,9 @@
+{
+    "Sandbox_KnoxAirSupport": "Knox Air Support",
+
+    "Sandbox_KnoxAirSupport_Enabled": "Enable Supply Drops",
+    "Sandbox_KnoxAirSupport_Enabled_tooltip": "Master kill switch. When disabled, no drops occur.",
+
+    "Sandbox_KnoxAirSupport_EventFrequency": "Event Frequency (minutes)",
+    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutes between supply drop events."
+}
