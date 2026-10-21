@@ -1,0 +1,54 @@
+{
+    "Sandbox_KnoxAirSupport": "Knox Air Support",
+
+    "Sandbox_KnoxAirSupport_Enabled": "Activar suministros",
+    "Sandbox_KnoxAirSupport_Enabled_tooltip": "Interruptor general. Si está desactivado no hay ningún lanzamiento.",
+
+    "Sandbox_KnoxAirSupport_EventFrequency": "Frecuencia de eventos (minutos)",
+    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutos entre lanzamientos de suministros.",
+
+    "Sandbox_KnoxAirSupport_DespawnTimer": "Duración de la caja (minutos)",
+    "Sandbox_KnoxAirSupport_DespawnTimer_tooltip": "Minutos antes de que la caja desaparezca. 0 = la caja se queda en el mundo para siempre.",
+
+    "Sandbox_KnoxAirSupport_MinDistance": "Distancia mínima (tiles)",
+    "Sandbox_KnoxAirSupport_MinDistance_tooltip": "Distancia más cercana a la que puede caer el suministro.",
+
+    "Sandbox_KnoxAirSupport_MaxDistance": "Distancia máxima (tiles)",
+    "Sandbox_KnoxAirSupport_MaxDistance_tooltip": "Distancia más lejana a la que puede caer el suministro.",
+
+    "Sandbox_KnoxAirSupport_SpawnRadius": "Radio de aparición (tiles)",
+    "Sandbox_KnoxAirSupport_SpawnRadius_tooltip": "La caja solo aparece cuando un jugador se acerca a esta distancia.",
+
+    "Sandbox_KnoxAirSupport_GuardianCount": "Guardianes NPC",
+    "Sandbox_KnoxAirSupport_GuardianCount_tooltip": "Cuántos Bandits custodian la caja. 0 los desactiva. Si falta el mod Bandits se usan zombis.",
+
+    "Sandbox_KnoxAirSupport_LootQuantity": "Cantidad de botín",
+    "Sandbox_KnoxAirSupport_LootQuantity_tooltip": "Número máximo de objetos dentro de una caja.",
+
+    "Sandbox_KnoxAirSupport_CrateCapacity": "Capacidad de la caja",
+    "Sandbox_KnoxAirSupport_CrateCapacity_tooltip": "Huecos que caben en la caja (una caja militar grande ronda los 75). Cada objeto ocupa al menos un hueco.",
+
+    "Sandbox_KnoxAirSupport_PriorityChance": "Probabilidad de accesorio especial (%)",
+    "Sandbox_KnoxAirSupport_PriorityChance_tooltip": "Probabilidad de que la caja traiga un objeto especial (silenciador, mira, accesorio de Snake). 0 = nunca.",
+
+    "Sandbox_KnoxAirSupport_BanditsGuardians": "Guardianes Bandits",
+    "Sandbox_KnoxAirSupport_BanditsGuardians_tooltip": "Generar NPCs de Bandits alrededor de la caja. Si se desactiva no aparece ningún mob.",
+
+    "Sandbox_KnoxAirSupport_GunsOfMarz": "Armas de Guns of Marz",
+    "Sandbox_KnoxAirSupport_GunsOfMarz_tooltip": "Añadir armas y piezas de Guns of Marz a las cajas.",
+
+    "Sandbox_KnoxAirSupport_SnakeLoot": "Armas de Snake's ModPack",
+    "Sandbox_KnoxAirSupport_SnakeLoot_tooltip": "Añadir armas y accesorios de Snake's ModPack a las cajas.",
+
+    "Sandbox_KnoxAirSupport_SpawnZombies": "Zombis de refuerzo",
+    "Sandbox_KnoxAirSupport_SpawnZombies_tooltip": "Si no hay guardianes Bandits (integración desactivada o mod no instalado) spawnear zombis en su lugar. Desactivado = solo la caja.",
+
+    "Sandbox_KnoxAirSupport_ALifeGuardians": "Guardianes Project A-Life",
+    "Sandbox_KnoxAirSupport_ALifeGuardians_tooltip": "Si no hay guardianes Bandits, usar los NPCs de Project A-Life (modo guardia, hostiles). Requiere el mod Project A-Life instalado y activado en la partida.",
+
+    "Sandbox_KnoxAirSupport_ShowMapMarker": "Marcador en el mapa",
+    "Sandbox_KnoxAirSupport_ShowMapMarker_tooltip": "Dibujar la zona de lanzamiento en el mapa del mundo.",
+
+    "Sandbox_KnoxAirSupport_PlaySound": "Reproducir sonido",
+    "Sandbox_KnoxAirSupport_PlaySound_tooltip": "Reproducir un sonido cuando aterrice la caja."
+}
