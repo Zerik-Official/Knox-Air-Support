@@ -1,8 +1,8 @@
 name=Knox Air Support
 id=KnoxAirSupport
 author=Zerik
-modversion=0.1
+modversion=0.2
 versionMin=42.0.0
 poster=poster.png
 icon=icon.png
-description=Periodic supply drops with guardian NPCs, event-driven airdrop system.
+description=Periodic supply drops with guardian NPCs, proximity based crate spawning and an in-game configuration panel with mod integrations (Bandits, Guns of Marz, Snake's ModPack).
