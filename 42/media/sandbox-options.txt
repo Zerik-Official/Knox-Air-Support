@@ -17,3 +17,139 @@ option KnoxAirSupport.EventFrequency
     page = KnoxAirSupport,
     translation = KnoxAirSupport_EventFrequency,
 }
+
+option KnoxAirSupport.DespawnTimer
+{
+    type = integer,
+    min = 0,
+    max = 720,
+    default = 0,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_DespawnTimer,
+}
+
+option KnoxAirSupport.MinDistance
+{
+    type = integer,
+    min = 10,
+    max = 3000,
+    default = 200,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_MinDistance,
+}
+
+option KnoxAirSupport.MaxDistance
+{
+    type = integer,
+    min = 20,
+    max = 4000,
+    default = 800,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_MaxDistance,
+}
+
+option KnoxAirSupport.SpawnRadius
+{
+    type = integer,
+    min = 10,
+    max = 600,
+    default = 120,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_SpawnRadius,
+}
+
+option KnoxAirSupport.GuardianCount
+{
+    type = integer,
+    min = 0,
+    max = 30,
+    default = 1,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_GuardianCount,
+}
+
+option KnoxAirSupport.PriorityChance
+{
+    type = integer,
+    min = 0,
+    max = 100,
+    default = 30,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_PriorityChance,
+}
+
+option KnoxAirSupport.CrateCapacity
+{
+    type = integer,
+    min = 10,
+    max = 200,
+    default = 75,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_CrateCapacity,
+}
+
+option KnoxAirSupport.LootQuantity
+{
+    type = integer,
+    min = 1,
+    max = 60,
+    default = 15,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_LootQuantity,
+}
+
+option KnoxAirSupport.BanditsGuardians
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_BanditsGuardians,
+}
+
+option KnoxAirSupport.GunsOfMarz
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_GunsOfMarz,
+}
+
+option KnoxAirSupport.SnakeLoot
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_SnakeLoot,
+}
+
+option KnoxAirSupport.SpawnZombies
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_SpawnZombies,
+}
+
+option KnoxAirSupport.ALifeGuardians
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_ALifeGuardians,
+}
+
+option KnoxAirSupport.ShowMapMarker
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_ShowMapMarker,
+}
+
+option KnoxAirSupport.PlaySound
+{
+    type = boolean,
+    default = true,
+    page = KnoxAirSupport,
+    translation = KnoxAirSupport_PlaySound,
+}
