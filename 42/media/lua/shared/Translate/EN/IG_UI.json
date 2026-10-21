@@ -1,0 +1,40 @@
+{
+    "IGUI_KnoxAirSupport_DropIncoming": "Supply drop incoming! Check your map.",
+    "IGUI_KnoxAirSupport_DropLanded": "The supply crate has landed.",
+    "IGUI_KnoxAirSupport_DropExpired": "The supply drop event has ended.",
+    "IGUI_KnoxAirSupport_MapLabel": "SUPPLY DROP",
+
+    "IGUI_KnoxAirSupport_Crate_Food": "Food Supply Crate",
+    "IGUI_KnoxAirSupport_Crate_Medical": "Medical Supply Crate",
+    "IGUI_KnoxAirSupport_Crate_Tools": "Utility Supply Crate",
+    "IGUI_KnoxAirSupport_Crate_Weapons": "Weapons Supply Crate",
+
+    "IGUI_KnoxAirSupport_OpenPanel": "Knox Air Support: Settings",
+    "IGUI_KnoxAirSupport_Dismantle": "Dismantle supply crate",
+    "IGUI_KnoxAirSupport_PanelTitle": "KNOX AIR SUPPORT",
+    "IGUI_KnoxAirSupport_SectionIntegrations": "Integrations and settings",
+    "IGUI_KnoxAirSupport_PanelHint": "Right click a character or the crate to open this panel.",
+
+    "IGUI_KnoxAirSupport_Int_Bandits": "Bandits guardians (NPCs)",
+    "IGUI_KnoxAirSupport_Int_ALife": "Project A-Life guardians",
+    "IGUI_KnoxAirSupport_Int_Zombies": "Zombies when there are no bandits",
+    "IGUI_KnoxAirSupport_Int_Marz": "Guns of Marz weapons",
+    "IGUI_KnoxAirSupport_Int_Snake": "Snake weapons and accessories",
+
+    "IGUI_KnoxAirSupport_Frequency": "Event frequency (min)",
+    "IGUI_KnoxAirSupport_SpawnRadius": "Spawn radius (tiles)",
+    "IGUI_KnoxAirSupport_Guardians": "Number of guardians",
+    "IGUI_KnoxAirSupport_LootQuantity": "Items per crate",
+    "IGUI_KnoxAirSupport_CrateCapacity": "Crate capacity (slots)",
+    "IGUI_KnoxAirSupport_PriorityChance": "Priority accessory chance (%)",
+    "IGUI_KnoxAirSupport_DespawnTimer": "Crate lifetime (min, 0 = forever)",
+
+    "IGUI_KnoxAirSupport_MapMarker": "Map marker",
+    "IGUI_KnoxAirSupport_Sound": "Landing sound",
+
+    "IGUI_KnoxAirSupport_On": "ON",
+    "IGUI_KnoxAirSupport_Off": "OFF",
+    "IGUI_KnoxAirSupport_NotInstalled": "mod not installed",
+    "IGUI_KnoxAirSupport_LowerPriority": "only used without Bandits",
+    "IGUI_KnoxAirSupport_Close": "Close"
+}
