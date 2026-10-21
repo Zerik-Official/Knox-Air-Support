@@ -1,6 +1,6 @@
-﻿# Knox Air Support
-
-A Project Zomboid mod focused on dynamic air support events, periodic supply drops, and guardian NPC encounters.
+﻿<h1 align="center">
+  Knox Air Support
+</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua">
@@ -9,6 +9,12 @@ A Project Zomboid mod focused on dynamic air support events, periodic supply dro
   <img src="https://img.shields.io/badge/Airdrops-111111?style=for-the-badge">
   <img src="https://img.shields.io/badge/NPC_Events-111111?style=for-the-badge">
 </p>
+
+<p align="center">
+  <img src=".github/preview.webp" alt="Knox Air Support Banner"/>
+</p>
+
+A Project Zomboid mod focused on dynamic air support events, periodic supply drops, and guardian NPC encounters.
 
 ## Overview
 
@@ -179,13 +185,12 @@ KnoxAirSupport.ForceDropHere()        -- drop at the player position
 KnoxAirSupport.EndEvent()             -- cancel the current event
 ```
 
-## Code style
-
-Every function, class and field is documented with LuaDoc comments in English
-(`---@class`, `---@param`, `---@return`). No free-form comments are used in the code.
-
 ## Installation
 
 1. Place the mod folder into your Project Zomboid mods directory.
 2. Enable it in the game launcher (and in the save you are playing).
 3. Start a new or existing save and enjoy the added air support events.
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
