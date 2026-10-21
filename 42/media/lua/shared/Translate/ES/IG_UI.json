@@ -1,0 +1,40 @@
+{
+    "IGUI_KnoxAirSupport_DropIncoming": "¡Suministro aéreo en camino! Mira el mapa.",
+    "IGUI_KnoxAirSupport_DropLanded": "La caja de suministros ha aterrizado.",
+    "IGUI_KnoxAirSupport_DropExpired": "El evento de suministros ha terminado.",
+    "IGUI_KnoxAirSupport_MapLabel": "SUMINISTRO",
+
+    "IGUI_KnoxAirSupport_Crate_Food": "Caja de suministros de comida",
+    "IGUI_KnoxAirSupport_Crate_Medical": "Caja de suministros médicos",
+    "IGUI_KnoxAirSupport_Crate_Tools": "Caja de herramientas y utilidades",
+    "IGUI_KnoxAirSupport_Crate_Weapons": "Caja de armas y equipo",
+
+    "IGUI_KnoxAirSupport_OpenPanel": "Knox Air Support: Configuración",
+    "IGUI_KnoxAirSupport_Dismantle": "Desmantelar caja de suministros",
+    "IGUI_KnoxAirSupport_PanelTitle": "KNOX AIR SUPPORT",
+    "IGUI_KnoxAirSupport_SectionIntegrations": "Integraciones y ajustes",
+    "IGUI_KnoxAirSupport_PanelHint": "Clic derecho en un personaje o en la caja para abrir este panel.",
+
+    "IGUI_KnoxAirSupport_Int_Bandits": "Guardianes Bandits (NPCs)",
+    "IGUI_KnoxAirSupport_Int_ALife": "Guardianes de Project A-Life",
+    "IGUI_KnoxAirSupport_Int_Zombies": "Zombis si no hay Bandits",
+    "IGUI_KnoxAirSupport_Int_Marz": "Armas de Guns of Marz",
+    "IGUI_KnoxAirSupport_Int_Snake": "Armas y accesorios de Snake",
+
+    "IGUI_KnoxAirSupport_Frequency": "Frecuencia de evento (min)",
+    "IGUI_KnoxAirSupport_SpawnRadius": "Radio de aparición (tiles)",
+    "IGUI_KnoxAirSupport_Guardians": "Número de guardianes",
+    "IGUI_KnoxAirSupport_LootQuantity": "Objetos por caja",
+    "IGUI_KnoxAirSupport_CrateCapacity": "Capacidad de la caja (huecos)",
+    "IGUI_KnoxAirSupport_PriorityChance": "Prob. de accesorio especial (%)",
+    "IGUI_KnoxAirSupport_DespawnTimer": "Duración de la caja (min, 0 = siempre)",
+
+    "IGUI_KnoxAirSupport_MapMarker": "Marcador en el mapa",
+    "IGUI_KnoxAirSupport_Sound": "Sonido de aterrizaje",
+
+    "IGUI_KnoxAirSupport_On": "SÍ",
+    "IGUI_KnoxAirSupport_Off": "NO",
+    "IGUI_KnoxAirSupport_NotInstalled": "mod no instalado",
+    "IGUI_KnoxAirSupport_LowerPriority": "solo se usa si no hay Bandits",
+    "IGUI_KnoxAirSupport_Close": "Cerrar"
+}
