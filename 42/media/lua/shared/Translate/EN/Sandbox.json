@@ -5,5 +5,50 @@
     "Sandbox_KnoxAirSupport_Enabled_tooltip": "Master kill switch. When disabled, no drops occur.",
 
     "Sandbox_KnoxAirSupport_EventFrequency": "Event Frequency (minutes)",
-    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutes between supply drop events."
+    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutes between supply drop events.",
+
+    "Sandbox_KnoxAirSupport_DespawnTimer": "Crate Lifetime (minutes)",
+    "Sandbox_KnoxAirSupport_DespawnTimer_tooltip": "Minutes before the crate disappears. 0 = the crate stays in the world forever.",
+
+    "Sandbox_KnoxAirSupport_MinDistance": "Minimum Distance (tiles)",
+    "Sandbox_KnoxAirSupport_MinDistance_tooltip": "Closest the drop can land from the players.",
+
+    "Sandbox_KnoxAirSupport_MaxDistance": "Maximum Distance (tiles)",
+    "Sandbox_KnoxAirSupport_MaxDistance_tooltip": "Farthest the drop can land from the players.",
+
+    "Sandbox_KnoxAirSupport_SpawnRadius": "Spawn Radius (tiles)",
+    "Sandbox_KnoxAirSupport_SpawnRadius_tooltip": "The crate only materialises once a player gets this close to the landing zone.",
+
+    "Sandbox_KnoxAirSupport_GuardianCount": "Guardian NPCs",
+    "Sandbox_KnoxAirSupport_GuardianCount_tooltip": "How many Bandits guard the crate. 0 disables them. If the Bandits mod is missing, zombies are used instead.",
+
+    "Sandbox_KnoxAirSupport_LootQuantity": "Loot Quantity",
+    "Sandbox_KnoxAirSupport_LootQuantity_tooltip": "Maximum number of items inside a crate.",
+
+    "Sandbox_KnoxAirSupport_CrateCapacity": "Crate Capacity",
+    "Sandbox_KnoxAirSupport_CrateCapacity_tooltip": "Slots the crate can hold (a big military crate is around 75). Every item takes at least one slot.",
+
+    "Sandbox_KnoxAirSupport_PriorityChance": "Priority Accessory Chance (%)",
+    "Sandbox_KnoxAirSupport_PriorityChance_tooltip": "Chance of getting one special item (suppressor, scope, Snake accessory) inside the crate. 0 = never.",
+
+    "Sandbox_KnoxAirSupport_BanditsGuardians": "Bandits Guardians",
+    "Sandbox_KnoxAirSupport_BanditsGuardians_tooltip": "Spawn Bandits NPCs around the crate. When disabled no mob is spawned at all.",
+
+    "Sandbox_KnoxAirSupport_GunsOfMarz": "Guns of Marz Weapons",
+    "Sandbox_KnoxAirSupport_GunsOfMarz_tooltip": "Add Guns of Marz weapons and weapon parts to the crates.",
+
+    "Sandbox_KnoxAirSupport_SnakeLoot": "Snake's ModPack Weapons",
+    "Sandbox_KnoxAirSupport_SnakeLoot_tooltip": "Add Snake's ModPack weapons and accessories to the crates.",
+
+    "Sandbox_KnoxAirSupport_SpawnZombies": "Fallback Zombies",
+    "Sandbox_KnoxAirSupport_SpawnZombies_tooltip": "If there are no Bandits guardians (integration disabled or mod not installed) spawn plain zombies instead. Disabled = only the crate.",
+
+    "Sandbox_KnoxAirSupport_ALifeGuardians": "Project A-Life Guardians",
+    "Sandbox_KnoxAirSupport_ALifeGuardians_tooltip": "If there are no Bandits guardians, use the Project A-Life NPCs (guard mode, hostile). Requires the Project A-Life mod installed and enabled in the save.",
+
+    "Sandbox_KnoxAirSupport_ShowMapMarker": "Show Map Marker",
+    "Sandbox_KnoxAirSupport_ShowMapMarker_tooltip": "Draw the drop location on the world map.",
+
+    "Sandbox_KnoxAirSupport_PlaySound": "Play Sound",
+    "Sandbox_KnoxAirSupport_PlaySound_tooltip": "Play a sound when the crate lands."
 }
