@@ -4,8 +4,8 @@
     "Sandbox_KnoxAirSupport_Enabled": "Activar suministros",
     "Sandbox_KnoxAirSupport_Enabled_tooltip": "Interruptor general. Si está desactivado no hay ningún lanzamiento.",
 
-    "Sandbox_KnoxAirSupport_EventFrequency": "Frecuencia de eventos (minutos)",
-    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutos entre lanzamientos de suministros.",
+    "Sandbox_KnoxAirSupport_EventFrequency": "Frecuencia de evento (minutos reales)",
+    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutos reales entre lanzamientos. No depende de la duración del día en el mundo.",
 
     "Sandbox_KnoxAirSupport_DespawnTimer": "Duración de la caja (minutos)",
     "Sandbox_KnoxAirSupport_DespawnTimer_tooltip": "Minutos antes de que la caja desaparezca. 0 = la caja se queda en el mundo para siempre.",
@@ -28,7 +28,7 @@
     "Sandbox_KnoxAirSupport_CrateCapacity": "Capacidad de la caja",
     "Sandbox_KnoxAirSupport_CrateCapacity_tooltip": "Huecos que caben en la caja (una caja militar grande ronda los 75). Cada objeto ocupa al menos un hueco.",
 
-    "Sandbox_KnoxAirSupport_PriorityChance": "Probabilidad de accesorio especial (%)",
+    "Sandbox_KnoxAirSupport_PriorityChance": "Probabilidad de accesorio especial (%%)",
     "Sandbox_KnoxAirSupport_PriorityChance_tooltip": "Probabilidad de que la caja traiga un objeto especial (silenciador, mira, accesorio de Snake). 0 = nunca.",
 
     "Sandbox_KnoxAirSupport_BanditsGuardians": "Guardianes Bandits",
