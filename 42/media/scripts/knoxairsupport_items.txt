@@ -3,10 +3,19 @@ module KnoxAirSupport
 	item KnoxSupplyCrate
 	{
 		DisplayCategory = Container,
-		Weight = 25.0,
+		Weight = 6.0,
 		Icon = KnoxAirSupport/crate,
-		ItemType = base:normal,
+		ItemType = base:container,
+		Capacity = 50,
+		WeightReduction = 85,
 		WorldStaticModel = KnoxSupplyCrate,
 		Tooltip = Tooltip_KnoxSupplyCrate,
+	}
+
+	model KnoxSupplyCrate
+	{
+		mesh = WorldItems/KnoxSupplyCrate,
+		texture = WorldItems/KnoxSupplyCrate,
+		scale = 1,
 	}
 }
