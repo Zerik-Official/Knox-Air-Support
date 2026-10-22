@@ -21,7 +21,7 @@
     "IGUI_KnoxAirSupport_Int_Marz": "Guns of Marz weapons",
     "IGUI_KnoxAirSupport_Int_Snake": "Snake weapons and accessories",
 
-    "IGUI_KnoxAirSupport_Frequency": "Event frequency (min)",
+    "IGUI_KnoxAirSupport_Frequency": "Event frequency (real min)",
     "IGUI_KnoxAirSupport_SpawnRadius": "Spawn radius (tiles)",
     "IGUI_KnoxAirSupport_Guardians": "Number of guardians",
     "IGUI_KnoxAirSupport_LootQuantity": "Items per crate",
