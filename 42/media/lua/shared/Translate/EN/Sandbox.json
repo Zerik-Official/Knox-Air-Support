@@ -24,6 +24,8 @@
 
     "Sandbox_KnoxAirSupport_LootQuantity": "Loot Quantity",
     "Sandbox_KnoxAirSupport_LootQuantity_tooltip": "Maximum number of items inside a crate.",
+    "Sandbox_KnoxAirSupport_LootQuantityMin": "Minimum Loot Quantity",
+    "Sandbox_KnoxAirSupport_LootQuantityMin_tooltip": "Minimum number of items inside a crate. The real amount is picked randomly between this value and the maximum.",
 
     "Sandbox_KnoxAirSupport_CrateCapacity": "Crate Capacity",
     "Sandbox_KnoxAirSupport_CrateCapacity_tooltip": "Slots the crate can hold (a big military crate is around 75). Every item takes at least one slot.",
