@@ -136,14 +136,14 @@ end
 function KnoxAirSupport.DefaultConfig()
     return {
         enabled = true,
-        eventFrequency = 180,
+        eventFrequency = 15,
         despawnTimer = 0,
         minDistance = 200,
         maxDistance = 800,
         spawnRadius = 120,
         guardianCount = 1,
         lootQuantity = 15,
-        crateCapacity = 75,
+        crateCapacity = 50,
         priorityChance = 30,
         int_bandits = true,
         int_marz = true,
@@ -167,7 +167,8 @@ function KnoxAirSupport.ConfigFromSandbox()
     config.spawnRadius = KnoxAirSupport.GetSandboxVar("SpawnRadius", config.spawnRadius)
     config.guardianCount = KnoxAirSupport.GetSandboxVar("GuardianCount", config.guardianCount)
     config.lootQuantity = KnoxAirSupport.GetSandboxVar("LootQuantity", config.lootQuantity)
-    config.crateCapacity = KnoxAirSupport.GetSandboxVar("CrateCapacity", config.crateCapacity)
+    config.crateCapacity = KnoxAirSupport.Clamp(
+        KnoxAirSupport.GetSandboxVar("CrateCapacity", config.crateCapacity), 10, 50)
     config.priorityChance = KnoxAirSupport.GetSandboxVar("PriorityChance", config.priorityChance)
     config.int_bandits = KnoxAirSupport.GetSandboxVar("BanditsGuardians", config.int_bandits)
     config.int_marz = KnoxAirSupport.GetSandboxVar("GunsOfMarz", config.int_marz)
@@ -177,6 +178,29 @@ function KnoxAirSupport.ConfigFromSandbox()
     config.mapMarker = KnoxAirSupport.GetSandboxVar("ShowMapMarker", config.mapMarker)
     config.sound = KnoxAirSupport.GetSandboxVar("PlaySound", config.sound)
     return config
+end
+
+--- Type of the crate item created by this mod.
+---@type string
+KnoxAirSupport.CRATE_ITEM = "KnoxAirSupport.KnoxSupplyCrate"
+
+--- Checks whether an inventory item is one of the supply crates.
+---@param item InventoryItem|nil
+---@return boolean
+function KnoxAirSupport.IsSupplyCrate(item)
+    if not item then return false end
+
+    if item.getFullType then
+        local ok, fullType = pcall(function() return item:getFullType() end)
+        if ok and fullType == KnoxAirSupport.CRATE_ITEM then return true end
+    end
+
+    if item.getModData then
+        local ok, modData = pcall(function() return item:getModData() end)
+        if ok and modData and modData.knoxCrate then return true end
+    end
+
+    return false
 end
 
 --- Clamps a numeric value into an inclusive range.
@@ -190,6 +214,18 @@ function KnoxAirSupport.Clamp(value, min, max)
     if number < min then return min end
     if number > max then return max end
     return math.floor(number)
+end
+
+--- Returns the current real time in milliseconds.
+---
+--- getTimestampMs follows the in game clock, so on short days it runs much
+--- faster than real time. os.time is the wall clock, which is what the drop
+--- interval needs.
+---@return number
+function KnoxAirSupport.RealTimeMs()
+    local ok, seconds = pcall(function() return os.time() end)
+    if ok and type(seconds) == "number" then return seconds * 1000 end
+    return getTimestampMs()
 end
 
 --- Translates a key, falling back to a literal when the key is missing.
