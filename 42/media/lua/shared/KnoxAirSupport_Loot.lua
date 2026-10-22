@@ -53,14 +53,15 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
                 "Base.AlcoholWipes", "Base.AlcoholedCottonBalls", "Base.AlcoholBandage",
                 "Base.Needle", "Base.Needle_Brass", "Base.SutureNeedleHolder", "Base.SutureNeedle",
                 "Base.SutureNeedleBox", "Base.Disinfectant", "Base.AdhesiveBandageBox",
+                "Base.BandageDirty", "Base.HotWaterBottle",
             },
         },
         {
             id = "medical_pills", min = 0, max = 2,
             items = {
                 "Base.Pills", "Base.PillsBeta", "Base.PillsVitamins", "Base.PillsAntiDep",
-                "Base.PillsSleepingTablets", "Base.HotWaterBottle", "Base.Hat_SurgicalMask",
-                "Base.FirstAidKit_Military",
+                "Base.PillsSleepingTablets", "Base.Hat_SurgicalMask",
+                "Base.FirstAidKit_Military", "Base.FirstAidKit",
             },
         },
     },
@@ -72,6 +73,7 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
                 "Base.SmallSaw", "Base.GardenSaw", "Base.Screwdriver", "Base.Screwdriver_Old",
                 "Base.Wrench", "Base.PipeWrench", "Base.Crowbar", "Base.Shovel",
                 "Base.Axe", "Base.Sledgehammer", "Base.CircularSawblade", "Base.HacksawBlade",
+                "Base.Pliers", "Base.Multitool", "Base.Jack",
             },
         },
         {
@@ -79,13 +81,16 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
             items = {
                 "Base.NailsBox", "Base.NailsCarton", "Base.Screws", "Base.ScrewsBox",
                 "Base.ScrewsCarton", "Base.MetalPipe", "Base.IronBar", "Base.AluminumScrap",
+                "Base.SheetMetal", "Base.Wire", "Base.DuctTape", "Base.Rope",
+                "Base.Bucket", "Base.Battery",
             },
         },
         {
             id = "workshop", min = 0, max = 2,
             items = {
                 "Base.BlowTorch", "Base.WeldingMask", "Base.WeldingRods", "Base.PropaneTank",
-                "Base.Lantern_Propane", "Base.CanteenMilitary",
+                "Base.Lantern_Propane", "Base.CanteenMilitary", "Base.Toolbox",
+                "Base.Paintbrush",
             },
         },
     },
@@ -96,7 +101,8 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
                 "Base.Machete", "Base.Katana", "Base.HuntingKnife", "Base.HuntingKnifeForged",
                 "Base.FightingKnife", "Base.BreadKnife", "Base.Handiknife", "Base.CrudeKnife",
                 "Base.CrudeShortSword", "Base.CrudeSword", "Base.BaseballBat",
-                "Base.BaseballBat_Metal", "Base.Crowbar",
+                "Base.BaseballBat_Metal", "Base.Crowbar", "Base.Machete_Crude",
+                "Base.MacheteForged", "Base.MacheteKnife",
             },
         },
         {
@@ -105,7 +111,7 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
                 "Base.Pistol", "Base.Pistol2", "Base.Pistol3", "Base.Revolver",
                 "Base.Revolver_Long", "Base.Shotgun", "Base.ShotgunSawnoff",
                 "Base.DoubleBarrelShotgun", "Base.HuntingRifle", "Base.VarmintRifle",
-                "Base.AssaultRifle", "Base.AssaultRifle2",
+                "Base.AssaultRifle", "Base.AssaultRifle2", "Base.DoubleBarrelShotgun",
             },
         },
         {
@@ -113,7 +119,18 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
             items = {
                 "Base.Bullets9mmBox", "Base.Bullets45Box", "Base.Bullets38Box", "Base.308Box",
                 "Base.Bullets357Box", "Base.556Box", "Base.ShotgunShellsBox", "Base.9mmClip",
-                "Base.45Clip", "Base.556Clip",
+                "Base.45Clip", "Base.556Clip", "Base.Bullets44Box", "Base.Bullets9mmCarton",
+                "Base.Bullets45Carton", "Base.Bullets38Carton", "Base.Bullets357Carton",
+                "Base.308Carton", "Base.556Carton", "Base.ShotgunShellsCarton",
+            },
+        },
+        {
+            id = "military_ammo_boxes", min = 0, max = 2,
+            items = {
+                "Base.Bag_AmmoBox_9mm", "Base.Bag_AmmoBox_308", "Base.Bag_AmmoBox_45",
+                "Base.Bag_AmmoBox_44", "Base.Bag_AmmoBox_38", "Base.Bag_AmmoBox_ShotgunShells",
+                "Base.Bag_AmmoBox", "Base.Bag_ProtectiveCaseBulkyAmmo_9mm",
+                "Base.Bag_ProtectiveCaseBulkyAmmo_308", "Base.Bag_ProtectiveCaseBulkyAmmo_45",
             },
         },
         {
@@ -121,7 +138,17 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
             items = {
                 "Base.x2Scope", "Base.x4Scope", "Base.x8Scope", "Base.Laser",
                 "Base.TritiumSights", "Base.RecoilPad", "Base.ChokeTubeFull",
-                "Base.ChokeTubeImproved",
+                "Base.ChokeTubeImproved", "Base.Magazine", "Base.Magazine_Military",
+            },
+        },
+        {
+            id = "accessories", min = 0, max = 2,
+            items = {
+                "Base.Gloves_LeatherGloves", "Base.Gloves_FingerlessLeatherGloves",
+                "Base.Gloves_LeatherGlovesBlack", "Base.Gloves_FingerlessGloves",
+                "Base.Gloves_Dish", "Base.Gloves_Surgical", "Base.Gloves_HuntingCamo",
+                "Base.HolsterAnkle", "Base.HolsterDouble", "Base.HolsterShoulder",
+                "Base.FirstAidKit_Military", "Base.Magazine_Military",
             },
         },
         {
@@ -134,7 +161,7 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
                 "Base.Hat_RiotHelmet", "Base.Jacket_ArmyOliveDrab", "Base.Trousers_ArmyService",
                 "Base.Shoes_ArmyBoots", "Base.ElbowPad_Left_Military",
                 "Base.Kneepad_Left_Military", "Base.GreaveBodyArmour_Left_Army",
-                "Base.GreaveBodyArmour_Right_Army", "Base.HolsterShoulder", "Base.HolsterDouble",
+                "Base.GreaveBodyArmour_Right_Army",
             },
         },
         {
@@ -163,11 +190,15 @@ function KnoxAirSupport.Loot.BuildCategories(eventTypeId, config)
     if config.int_marz and KnoxAirSupport.Integrations.IsAvailable("marz") then
         local weapons = KnoxAirSupport.Integrations.GetPool("marz", "weapons")
         local parts = KnoxAirSupport.Integrations.GetPool("marz", "parts")
+        local ammo = KnoxAirSupport.Integrations.GetPool("marz", "ammo")
         if #weapons > 0 then
             categories[#categories + 1] = { id = "marz_weapons", min = 0, max = 2, items = weapons }
         end
         if #parts > 0 then
-            categories[#categories + 1] = { id = "marz_parts", min = 0, max = 1, items = parts }
+            categories[#categories + 1] = { id = "marz_parts", min = 0, max = 2, items = parts }
+        end
+        if #ammo > 0 then
+            categories[#categories + 1] = { id = "marz_ammo", min = 0, max = 2, items = ammo }
         end
     end
 
@@ -175,10 +206,10 @@ function KnoxAirSupport.Loot.BuildCategories(eventTypeId, config)
         local weapons = KnoxAirSupport.Integrations.GetPool("snake", "weapons")
         local accessories = KnoxAirSupport.Integrations.GetPool("snake", "accessories")
         if #weapons > 0 then
-            categories[#categories + 1] = { id = "snake_weapons", min = 0, max = 1, items = weapons }
+            categories[#categories + 1] = { id = "snake_weapons", min = 0, max = 2, items = weapons }
         end
         if #accessories > 0 then
-            categories[#categories + 1] = { id = "snake_accessories", min = 0, max = 2, items = accessories }
+            categories[#categories + 1] = { id = "snake_accessories", min = 0, max = 3, items = accessories }
         end
     end
 
@@ -207,33 +238,59 @@ function KnoxAirSupport.Loot.PickUnique(items, count)
 end
 
 --- Fills a container with the categories of an event type.
+--- The amount of items is random between the configured minimum and maximum, and
+--- the categories are rolled until that amount is reached. Every item type can
+--- appear twice at most, so the crate keeps some variety.
 ---@param container ItemContainer
 ---@param eventTypeId string
 ---@param config table<string,any>
 ---@return integer
 function KnoxAirSupport.Loot.FillContainer(container, eventTypeId, config)
     local categories = KnoxAirSupport.Loot.BuildCategories(eventTypeId, config)
-    local maxItems = config.lootQuantity or 15
+    local minItems = math.max(1, math.floor(tonumber(config.lootQuantityMin) or 8))
+    local maxItems = math.max(minItems, math.floor(tonumber(config.lootQuantity) or 20))
+    local capacity = math.max(minItems, math.floor(tonumber(config.crateCapacity) or 50))
+    if maxItems > capacity then maxItems = capacity end
+
+    local target = ZombRand(minItems, maxItems + 1)
+    local copies = {}
     local added = 0
+    local rounds = 0
 
-    for _, category in ipairs(categories) do
-        if added >= maxItems then break end
+    while added < target and rounds < 12 do
+        rounds = rounds + 1
+        local progress = false
 
-        local count = ZombRand(category.min, category.max)
-        if count > #category.items then count = #category.items end
-        if count > 0 then
-            local picked = KnoxAirSupport.Loot.PickUnique(category.items, count)
-            for _, itemType in ipairs(picked) do
-                if added >= maxItems then break end
+        for _, category in ipairs(categories) do
+            if added >= target then break end
+
+            local available = {}
+            for _, itemType in ipairs(category.items) do
+                if (copies[itemType] or 0) < 2 then available[#available + 1] = itemType end
+            end
+            if #available == 0 then
+                for _, itemType in ipairs(category.items) do available[#available + 1] = itemType end
+            end
+
+            local low = math.max(1, category.min)
+            local count = ZombRand(low, category.max + 1)
+            if count > #available then count = #available end
+
+            for _, itemType in ipairs(KnoxAirSupport.Loot.PickUnique(available, count)) do
+                if added >= target then break end
                 local item = container:AddItem(itemType)
                 if item then
                     added = added + 1
+                    progress = true
+                    copies[itemType] = (copies[itemType] or 0) + 1
                     if category.condition and item.setCondition then
                         pcall(function() item:setCondition(category.condition) end)
                     end
                 end
             end
         end
+
+        if not progress then break end
     end
 
     return added
