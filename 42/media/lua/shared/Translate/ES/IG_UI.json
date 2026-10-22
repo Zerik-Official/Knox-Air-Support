@@ -21,7 +21,7 @@
     "IGUI_KnoxAirSupport_Int_Marz": "Armas de Guns of Marz",
     "IGUI_KnoxAirSupport_Int_Snake": "Armas y accesorios de Snake",
 
-    "IGUI_KnoxAirSupport_Frequency": "Frecuencia de evento (min)",
+    "IGUI_KnoxAirSupport_Frequency": "Frecuencia de evento (min reales)",
     "IGUI_KnoxAirSupport_SpawnRadius": "Radio de aparición (tiles)",
     "IGUI_KnoxAirSupport_Guardians": "Número de guardianes",
     "IGUI_KnoxAirSupport_LootQuantity": "Objetos por caja",
