@@ -93,8 +93,7 @@ function KnoxAirSupport.Integrations.Detect()
 
     print(KnoxAirSupport.TAG .. " Integrations detected - GunsOfMarz: "
         .. (pools.marz.available and (#pools.marz.weapons .. " weapons") or "not installed")
-        .. " | Snake: " .. (pools.snake.available and (#pools.snake.weapons .. " weapons / " .. #pools.snake.accessories .. " accessories") or "not installed")
-        .. " | Bandits: " .. (pools.bandits.available and "available" or "not available"))
+        .. " | Snake: " .. (pools.snake.available and (#pools.snake.weapons .. " weapons / " .. #pools.snake.accessories .. " accessories") or "not installed"))
 
     return pools
 end
@@ -105,6 +104,10 @@ end
 function KnoxAirSupport.Integrations.IsAvailable(id)
     if id == "alife" then
         return (ProjectALife ~= nil) and true or false
+    end
+
+    if id == "bandits" then
+        return (BanditServer ~= nil and BanditServer.Spawner ~= nil) and true or false
     end
 
     local detected = KnoxAirSupport.Integrations.Detect()
