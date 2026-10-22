@@ -4,8 +4,8 @@
     "Sandbox_KnoxAirSupport_Enabled": "Enable Supply Drops",
     "Sandbox_KnoxAirSupport_Enabled_tooltip": "Master kill switch. When disabled, no drops occur.",
 
-    "Sandbox_KnoxAirSupport_EventFrequency": "Event Frequency (minutes)",
-    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Minutes between supply drop events.",
+    "Sandbox_KnoxAirSupport_EventFrequency": "Event Frequency (real minutes)",
+    "Sandbox_KnoxAirSupport_EventFrequency_tooltip": "Real minutes between drops. It does not depend on how long a day lasts in the world.",
 
     "Sandbox_KnoxAirSupport_DespawnTimer": "Crate Lifetime (minutes)",
     "Sandbox_KnoxAirSupport_DespawnTimer_tooltip": "Minutes before the crate disappears. 0 = the crate stays in the world forever.",
@@ -28,7 +28,7 @@
     "Sandbox_KnoxAirSupport_CrateCapacity": "Crate Capacity",
     "Sandbox_KnoxAirSupport_CrateCapacity_tooltip": "Slots the crate can hold (a big military crate is around 75). Every item takes at least one slot.",
 
-    "Sandbox_KnoxAirSupport_PriorityChance": "Priority Accessory Chance (%)",
+    "Sandbox_KnoxAirSupport_PriorityChance": "Priority Accessory Chance (%%)",
     "Sandbox_KnoxAirSupport_PriorityChance_tooltip": "Chance of getting one special item (suppressor, scope, Snake accessory) inside the crate. 0 = never.",
 
     "Sandbox_KnoxAirSupport_BanditsGuardians": "Bandits Guardians",
