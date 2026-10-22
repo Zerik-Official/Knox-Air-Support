@@ -69,6 +69,10 @@ function KnoxAirSupport.FindSpawnSquare(x, y, maxRadius, avoid)
 end
 
 --- Creates the supply crate on a square and fills it with the loot of an event type.
+--- An item of type base:container owns an internal container that is only
+--- reachable through getItemContainer(); setContainer would replace the wrong
+--- reference and the loot would stay invisible. The container is marked as
+--- explored so the engine does not roll procedural loot into it.
 ---@param square IsoGridSquare
 ---@param eventTypeId string
 ---@param config table<string,any>
@@ -81,13 +85,9 @@ function KnoxAirSupport.SpawnCrate(square, eventTypeId, config)
         item = instanceItem(CRATE_ITEM)
         if not item then error("could not create " .. CRATE_ITEM) end
 
-        -- An item of type base:container owns an internal container that is only
-        -- reachable through getItemContainer(); setContainer would replace the
-        -- wrong reference and the loot would stay invisible.
         local container = item:getItemContainer()
         if not container then error("the crate has no internal container") end
 
-        -- explored=true stops the engine from rolling procedural loot into it.
         container:setExplored(true)
         container:setCapacity(KnoxAirSupport.Clamp(config.crateCapacity or 50, 10, 50))
 
@@ -172,6 +172,9 @@ function KnoxAirSupport.SpawnGuardians(x, y, clanId, config)
 end
 
 --- Spawns the guardian NPCs with the Project A-Life api.
+--- The keep-out is disabled because the crate lands on top of the player and the
+--- default of 40 tiles would always refuse the squad; A-Life still stages the
+--- NPCs away from the player and lets them walk in.
 ---@param x number
 ---@param y number
 ---@param count integer
@@ -213,9 +216,6 @@ function KnoxAirSupport.SpawnALifeGuardians(x, y, count, config)
         playerStance = "hostile",
         hostileOverride = "hostile",
         respectGates = true,
-        -- The crate lands on top of the player, so the default keep-out of 40
-        -- tiles would always refuse the squad. A-Life still stages the NPCs
-        -- away from the player and lets them walk in.
         playerKeepOut = 0,
         distance = 25,
         requestId = "knoxair:" .. tostring(getTimestampMs()) .. ":" .. tostring(alifeRequestCounter),
