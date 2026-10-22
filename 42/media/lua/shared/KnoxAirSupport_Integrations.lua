@@ -36,13 +36,21 @@ local function itemIsAccessory(item)
     return category == "Accessory" or category == "ProtectiveGear"
 end
 
+--- Checks whether an item script is ammunition or a magazine.
+---@param item Item
+---@return boolean
+local function itemIsAmmunition(item)
+    local category = item:getDisplayCategory()
+    return category == "Ammo" or category == "WeaponMagazine"
+end
+
 --- Scans the loaded scripts once and builds the item pools of every supported mod.
 ---@return table<string, table<string, any>>
 function KnoxAirSupport.Integrations.Detect()
     if pools then return pools end
 
     pools = {
-        marz = { weapons = {}, parts = {}, suppressors = {}, available = false },
+        marz = { weapons = {}, parts = {}, suppressors = {}, ammo = {}, available = false },
         snake = { weapons = {}, accessories = {}, available = false },
         bandits = { available = false },
     }
@@ -78,6 +86,8 @@ function KnoxAirSupport.Integrations.Detect()
                 if full:lower():find("suppressor") then
                     table.insert(pools.marz.suppressors, full)
                 end
+            elseif itemIsAmmunition(item) then
+                table.insert(pools.marz.ammo, full)
             end
         elseif isSnake then
             pools.snake.available = true
@@ -92,7 +102,7 @@ function KnoxAirSupport.Integrations.Detect()
     pools.bandits.available = (BanditServer ~= nil and BanditServer.Spawner ~= nil)
 
     print(KnoxAirSupport.TAG .. " Integrations detected - GunsOfMarz: "
-        .. (pools.marz.available and (#pools.marz.weapons .. " weapons") or "not installed")
+        .. (pools.marz.available and (#pools.marz.weapons .. " weapons / " .. #pools.marz.ammo .. " ammo") or "not installed")
         .. " | Snake: " .. (pools.snake.available and (#pools.snake.weapons .. " weapons / " .. #pools.snake.accessories .. " accessories") or "not installed"))
 
     return pools
