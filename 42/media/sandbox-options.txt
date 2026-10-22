@@ -13,7 +13,7 @@ option KnoxAirSupport.EventFrequency
     type = integer,
     min = 1,
     max = 1440,
-    default = 180,
+    default = 15,
     page = KnoxAirSupport,
     translation = KnoxAirSupport_EventFrequency,
 }
@@ -82,8 +82,8 @@ option KnoxAirSupport.CrateCapacity
 {
     type = integer,
     min = 10,
-    max = 200,
-    default = 75,
+    max = 50,
+    default = 50,
     page = KnoxAirSupport,
     translation = KnoxAirSupport_CrateCapacity,
 }
