@@ -5,7 +5,9 @@ require "KnoxAirSupport_Integrations"
 ---@field config table<string,any>
 ---@field activeEvent table|nil
 ---@field panel KnoxAirSupportOptionsPanel|nil
+---@field handlers table<string,function>
 KnoxAirSupport_Client = KnoxAirSupport_Client or {}
+KnoxAirSupport_Client.handlers = KnoxAirSupport_Client.handlers or {}
 
 KnoxAirSupport_Client.config = KnoxAirSupport.ConfigFromSandbox()
 KnoxAirSupport_Client.activeEvent = nil
@@ -169,10 +171,7 @@ local function isSupplyCrate(object)
     local itemOk, itemValue = pcall(function() return object.item end)
     if itemOk then item = itemValue end
 
-    if item and item.getModData then
-        local dataOk, modData = pcall(function() return item:getModData() end)
-        if dataOk and modData and modData.knoxCrate then return true end
-    end
+    if item and KnoxAirSupport.IsSupplyCrate(item) then return true end
 
     if object.getModData then
         local dataOk, modData = pcall(function() return object:getModData() end)
@@ -180,6 +179,53 @@ local function isSupplyCrate(object)
     end
 
     return false
+end
+
+--- Dismantles a crate that is inside an inventory.
+---@param item InventoryItem|nil
+---@return nil
+local function dismantleInventoryItem(item)
+    if not item then return end
+    local player = getPlayer()
+    if not player then return end
+    local inventory = player:getInventory()
+    if not inventory then return end
+    if not inventory:contains(item) then return end
+    inventory:Remove(item)
+    KnoxAirSupport.SendToServer(KnoxAirSupport.CMD_DISMANTLE, { inventory = true })
+end
+
+--- Adds the mod entries to the inventory context menu.
+---@param player IsoPlayer
+---@param context ISContextMenu
+---@param items table[]
+---@return nil
+local function onFillInventoryObjectContextMenu(player, context, items)
+    if not items then return end
+
+    for _, item in ipairs(items) do
+        if KnoxAirSupport.IsSupplyCrate(item) then
+            context:addOption(KnoxAirSupport.Translate("IGUI_KnoxAirSupport_Dismantle", "Dismantle"),
+                player, KnoxAirSupport_Client, dismantleInventoryItem, item)
+            return
+        end
+    end
+end
+
+if Events.OnFillWorldObjectContextMenu then
+    if KnoxAirSupport_Client.handlers.worldContext then
+        Events.OnFillWorldObjectContextMenu.Remove(KnoxAirSupport_Client.handlers.worldContext)
+    end
+    KnoxAirSupport_Client.handlers.worldContext = onFillWorldObjectContextMenu
+    Events.OnFillWorldObjectContextMenu.Add(onFillWorldObjectContextMenu)
+end
+
+if Events.OnFillInventoryObjectContextMenu then
+    if KnoxAirSupport_Client.handlers.inventoryContext then
+        Events.OnFillInventoryObjectContextMenu.Remove(KnoxAirSupport_Client.handlers.inventoryContext)
+    end
+    KnoxAirSupport_Client.handlers.inventoryContext = onFillInventoryObjectContextMenu
+    Events.OnFillInventoryObjectContextMenu.Add(onFillInventoryObjectContextMenu)
 end
 
 --- Adds the mod entries to the world context menu.
@@ -214,8 +260,6 @@ local function onFillWorldObjectContextMenu(player, context, objects)
     end
 end
 
-Events.OnFillWorldObjectContextMenu.Add(onFillWorldObjectContextMenu)
-
 --- Prepares the client side of the mod.
 ---@return nil
 local function onGameStart()
@@ -223,4 +267,10 @@ local function onGameStart()
     KnoxAirSupport.SendToServer(KnoxAirSupport.CMD_CONFIG_GET, {})
 end
 
-Events.OnGameStart.Add(onGameStart)
+if Events.OnGameStart then
+    if KnoxAirSupport_Client.handlers.gameStart then
+        Events.OnGameStart.Remove(KnoxAirSupport_Client.handlers.gameStart)
+    end
+    KnoxAirSupport_Client.handlers.gameStart = onGameStart
+    Events.OnGameStart.Add(onGameStart)
+end
