@@ -47,8 +47,9 @@ end
 ---@param x integer
 ---@param y integer
 ---@param maxRadius integer|nil
+---@param avoid function|nil Returns true when the square must be skipped.
 ---@return IsoGridSquare|nil, integer, integer
-function KnoxAirSupport.FindSpawnSquare(x, y, maxRadius)
+function KnoxAirSupport.FindSpawnSquare(x, y, maxRadius, avoid)
     maxRadius = maxRadius or 25
     for radius = 0, maxRadius do
         for ox = -radius, radius do
@@ -56,7 +57,9 @@ function KnoxAirSupport.FindSpawnSquare(x, y, maxRadius)
                 if math.abs(ox) == radius or math.abs(oy) == radius or radius == 0 then
                     local square = getCell():getGridSquare(x + ox, y + oy, 0)
                     if square and square:isFree(false) and not square:isWaterSquare() then
-                        return square, x + ox, y + oy
+                        if not (avoid and avoid(square)) then
+                            return square, x + ox, y + oy
+                        end
                     end
                 end
             end
@@ -75,14 +78,18 @@ function KnoxAirSupport.SpawnCrate(square, eventTypeId, config)
 
     local item = nil
     local ok, err = pcall(function()
-        item = InventoryItemFactory.CreateItem(CRATE_ITEM)
+        item = instanceItem(CRATE_ITEM)
         if not item then error("could not create " .. CRATE_ITEM) end
 
-        local container = ItemContainer.new()
-        container:setType("crate")
-        container:setCapacity(KnoxAirSupport.Clamp(config.crateCapacity or 75, 10, 200))
-        container:setExplored(false)
-        item:setContainer(container)
+        -- An item of type base:container owns an internal container that is only
+        -- reachable through getItemContainer(); setContainer would replace the
+        -- wrong reference and the loot would stay invisible.
+        local container = item:getItemContainer()
+        if not container then error("the crate has no internal container") end
+
+        -- explored=true stops the engine from rolling procedural loot into it.
+        container:setExplored(true)
+        container:setCapacity(KnoxAirSupport.Clamp(config.crateCapacity or 50, 10, 50))
 
         KnoxAirSupport.Loot.FillContainer(container, eventTypeId, config)
 
@@ -106,9 +113,10 @@ function KnoxAirSupport.SpawnCrate(square, eventTypeId, config)
     end
 
     if item then
+        local container = item:getItemContainer()
         print(KnoxAirSupport.TAG .. " Crate spawned at " .. square:getX() .. ", " .. square:getY()
             .. " | type=" .. eventTypeId
-            .. " | items=" .. (item:getContainer() and item:getContainer():getItems():size() or 0))
+            .. " | items=" .. (container and container:getItems():size() or 0))
     end
 
     return item
@@ -205,6 +213,11 @@ function KnoxAirSupport.SpawnALifeGuardians(x, y, count, config)
         playerStance = "hostile",
         hostileOverride = "hostile",
         respectGates = true,
+        -- The crate lands on top of the player, so the default keep-out of 40
+        -- tiles would always refuse the squad. A-Life still stages the NPCs
+        -- away from the player and lets them walk in.
+        playerKeepOut = 0,
+        distance = 25,
         requestId = "knoxair:" .. tostring(getTimestampMs()) .. ":" .. tostring(alifeRequestCounter),
     }
 
@@ -250,19 +263,36 @@ function KnoxAirSupport.SpawnZombies(x, y, count)
     end
 end
 
+--- Searches a container (and its nested containers) for a supply crate.
+---@param container ItemContainer|nil
+---@return InventoryItem|nil
+local function findCrateInContainer(container)
+    if not container then return nil end
+    local items = container:getItems()
+    if not items then return nil end
+
+    for i = 0, items:size() - 1 do
+        local item = items:get(i)
+        if item then
+            if KnoxAirSupport.IsSupplyCrate(item) then return item end
+            if item.getContainer then
+                local nested = findCrateInContainer(item:getContainer())
+                if nested then return nested end
+            end
+        end
+    end
+
+    return nil
+end
+
 --- Removes a crate from the world and gives the dismantling materials to a player.
 ---@param squareX integer
 ---@param squareY integer
 ---@param squareZ integer
 ---@param player IsoPlayer|nil
+---@param fromInventory boolean|nil
 ---@return boolean
-function KnoxAirSupport.DismantleCrate(squareX, squareY, squareZ, player)
-    local square = getCell():getGridSquare(squareX, squareY, squareZ)
-    if not square then return false end
-
-    local object = KnoxAirSupport.FindCrateAt(square)
-    if not object then return false end
-
+function KnoxAirSupport.DismantleCrate(squareX, squareY, squareZ, player, fromInventory)
     local items = {}
     for _, reward in ipairs(KnoxAirSupport.DISMANTLE_REWARDS) do
         local amount = ZombRand(reward.min, reward.max)
@@ -271,14 +301,33 @@ function KnoxAirSupport.DismantleCrate(squareX, squareY, squareZ, player)
         end
     end
 
-    if player and player.getInventory then
-        local inventory = player:getInventory()
-        for _, itemType in ipairs(items) do
-            inventory:AddItem(itemType)
+    local function giveRewards()
+        if player and player.getInventory then
+            local inventory = player:getInventory()
+            for _, itemType in ipairs(items) do
+                inventory:AddItem(itemType)
+            end
         end
     end
 
+    if fromInventory then
+        if not player or not player.getInventory then return false end
+        local crate = findCrateInContainer(player:getInventory())
+        if not crate then return false end
+        player:getInventory():Remove(crate)
+        giveRewards()
+        print(KnoxAirSupport.TAG .. " Crate dismantled from the inventory")
+        return true
+    end
+
+    local square = getCell():getGridSquare(squareX, squareY, squareZ)
+    if not square then return false end
+
+    local object = KnoxAirSupport.FindCrateAt(square)
+    if not object then return false end
+
     square:transmitRemoveItemFromSquare(object)
+    giveRewards()
     print(KnoxAirSupport.TAG .. " Crate dismantled at " .. squareX .. ", " .. squareY)
     return true
 end
