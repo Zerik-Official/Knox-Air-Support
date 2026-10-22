@@ -28,7 +28,7 @@ local ROWS = {
     { type = "int", key = "spawnRadius", label = "IGUI_KnoxAirSupport_SpawnRadius", fallback = "Spawn radius (tiles)", min = 10, max = 600, step = 10 },
     { type = "int", key = "guardianCount", label = "IGUI_KnoxAirSupport_Guardians", fallback = "Number of guardians", min = 0, max = 30, step = 1 },
     { type = "int", key = "lootQuantity", label = "IGUI_KnoxAirSupport_LootQuantity", fallback = "Items per crate", min = 1, max = 60, step = 1 },
-    { type = "int", key = "crateCapacity", label = "IGUI_KnoxAirSupport_CrateCapacity", fallback = "Crate capacity (slots)", min = 10, max = 200, step = 5 },
+    { type = "int", key = "crateCapacity", label = "IGUI_KnoxAirSupport_CrateCapacity", fallback = "Crate capacity (slots)", min = 10, max = 50, step = 5 },
     { type = "int", key = "priorityChance", label = "IGUI_KnoxAirSupport_PriorityChance", fallback = "Priority accessory chance (%)", min = 0, max = 100, step = 5 },
     { type = "int", key = "despawnTimer", label = "IGUI_KnoxAirSupport_DespawnTimer", fallback = "Crate lifetime (min, 0 = forever)", min = 0, max = 720, step = 15 },
     { type = "toggle", key = "mapMarker", label = "IGUI_KnoxAirSupport_MapMarker", fallback = "Map marker" },
