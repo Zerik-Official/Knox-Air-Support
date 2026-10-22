@@ -45,6 +45,7 @@ KnoxAirSupport.CONFIG_KEYS = {
     "spawnRadius",
     "guardianCount",
     "lootQuantity",
+    "lootQuantityMin",
     "crateCapacity",
     "priorityChance",
     "int_bandits",
@@ -142,7 +143,8 @@ function KnoxAirSupport.DefaultConfig()
         maxDistance = 800,
         spawnRadius = 120,
         guardianCount = 1,
-        lootQuantity = 15,
+        lootQuantity = 22,
+        lootQuantityMin = 12,
         crateCapacity = 50,
         priorityChance = 30,
         int_bandits = true,
@@ -166,7 +168,13 @@ function KnoxAirSupport.ConfigFromSandbox()
     config.maxDistance = KnoxAirSupport.GetSandboxVar("MaxDistance", config.maxDistance)
     config.spawnRadius = KnoxAirSupport.GetSandboxVar("SpawnRadius", config.spawnRadius)
     config.guardianCount = KnoxAirSupport.GetSandboxVar("GuardianCount", config.guardianCount)
-    config.lootQuantity = KnoxAirSupport.GetSandboxVar("LootQuantity", config.lootQuantity)
+    config.lootQuantity = KnoxAirSupport.Clamp(
+        KnoxAirSupport.GetSandboxVar("LootQuantity", config.lootQuantity), 1, 50)
+    config.lootQuantityMin = KnoxAirSupport.Clamp(
+        KnoxAirSupport.GetSandboxVar("LootQuantityMin", config.lootQuantityMin), 1, 50)
+    if config.lootQuantityMin > config.lootQuantity then
+        config.lootQuantityMin = config.lootQuantity
+    end
     config.crateCapacity = KnoxAirSupport.Clamp(
         KnoxAirSupport.GetSandboxVar("CrateCapacity", config.crateCapacity), 10, 50)
     config.priorityChance = KnoxAirSupport.GetSandboxVar("PriorityChance", config.priorityChance)
