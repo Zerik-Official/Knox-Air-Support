@@ -440,7 +440,7 @@ UV_METAL: UVRect = _atlas_cell_uv(0, 0)
 UV_WEBBING: UVRect = _atlas_cell_uv(1, 0)
 UV_ROPE: UVRect = _atlas_cell_uv(2, 0)
 
-MAT_CANVAS: bpy.types.Material = create_material("Knox_Lona", "#6A6A50", 0.85, smooth_shading=True)
+MAT_CANVAS: bpy.types.Material = create_material("Knox_Lona", "#6A6A50", 0.85, smooth_shading=True, double_sided=True)
 MAT_WEBBING: bpy.types.Material = create_material("Knox_Cincha", "#2E3024", 0.80)
 MAT_METAL: bpy.types.Material = create_material("Knox_Metal", "#4A4A4C", 0.40, metallic=0.75)
 MAT_ROPE: bpy.types.Material = create_material("Knox_Cuerda", "#8A7650", 0.90, smooth_shading=True)
@@ -1086,6 +1086,68 @@ def _assign_uvs(mesh: bpy.types.Mesh, material: bpy.types.Material) -> None:
             )
 
 
+def _link_atlas_texture(material: bpy.types.Material, texture_image: bpy.types.Image) -> None:
+    """
+    Connect the atlas image to the material's base color.
+
+    Args:
+        material: Material whose shader receives the texture.
+        texture_image: Atlas image to sample.
+
+    Returns:
+        None.
+    """
+    try:
+        node_tree = material.node_tree
+        bsdf_node = node_tree.nodes.get("Principled BSDF")
+        if bsdf_node is None:
+            return
+        texture_node = node_tree.nodes.new("ShaderNodeTexImage")
+        texture_node.image = texture_image
+        texture_node.location = (-320, 260)
+        texture_node.interpolation = 'Smart'
+        uv_map_node = node_tree.nodes.new("ShaderNodeUVMap")
+        uv_map_node.uv_map = "UVMap"
+        uv_map_node.location = (-540, 260)
+        node_tree.links.new(uv_map_node.outputs["UV"], texture_node.inputs["Vector"])
+        node_tree.links.new(texture_node.outputs["Color"], bsdf_node.inputs["Base Color"])
+    except Exception as exc:
+        print("Warning: could not link texture: " + str(exc))
+
+
+def _unify_into_single_mesh(name: str, mesh_objects: Sequence[bpy.types.Object],
+          texture_image: bpy.types.Image) -> bpy.types.Object:
+    """
+    Join every material mesh into one object that uses a single material.
+
+    Project Zomboid renders only the first mesh of a static model, so the whole
+    crate has to be exported as one mesh with one material and one texture.
+
+    Args:
+        name: Name given to the joined object and its mesh.
+        mesh_objects: Objects to join.
+        texture_image: Atlas image assigned to the unified material.
+
+    Returns:
+        The joined object.
+    """
+    unified_material = create_material(name, "#6A6A50", 0.85, double_sided=True)
+    _link_atlas_texture(unified_material, texture_image)
+    bpy.ops.object.select_all(action='DESELECT')
+    for mesh_object in mesh_objects:
+        mesh_object.select_set(True)
+    bpy.context.view_layer.objects.active = mesh_objects[0]
+    bpy.ops.object.join()
+    joined_object = bpy.context.view_layer.objects.active
+    for polygon in joined_object.data.polygons:
+        polygon.material_index = 0
+    joined_object.data.materials.clear()
+    joined_object.data.materials.append(unified_material)
+    joined_object.name = name
+    joined_object.data.name = name
+    return joined_object
+
+
 def finalize_and_export(name: str, texture_image: bpy.types.Image) -> None:
     """
     Create Blender objects, bind the atlas, and export the FBX.
@@ -1101,9 +1163,9 @@ def finalize_and_export(name: str, texture_image: bpy.types.Image) -> None:
     bpy.context.scene.collection.children.link(collection)
     root_object = bpy.data.objects.new(name, None)
     collection.objects.link(root_object)
+    mesh_objects: List[bpy.types.Object] = []
     for material, bm in _material_bmeshes.items():
-        if material not in DOUBLE_SIDED_MATERIALS:
-            bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
         mesh = bpy.data.meshes.new(name + "_" + material.name)
         bm.to_mesh(mesh)
         bm.free()
@@ -1120,21 +1182,9 @@ def finalize_and_export(name: str, texture_image: bpy.types.Image) -> None:
             except Exception:
                 pass
         _assign_uvs(mesh, material)
-        try:
-            node_tree = material.node_tree
-            bsdf_node = node_tree.nodes.get("Principled BSDF")
-            if bsdf_node is not None:
-                texture_node = node_tree.nodes.new("ShaderNodeTexImage")
-                texture_node.image = texture_image
-                texture_node.location = (-320, 260)
-                texture_node.interpolation = 'Smart'
-                uv_map_node = node_tree.nodes.new("ShaderNodeUVMap")
-                uv_map_node.uv_map = "UVMap"
-                uv_map_node.location = (-540, 260)
-                node_tree.links.new(uv_map_node.outputs["UV"], texture_node.inputs["Vector"])
-                node_tree.links.new(texture_node.outputs["Color"], bsdf_node.inputs["Base Color"])
-        except Exception as exc:
-            print("Warning: could not link texture: " + str(exc))
+        mesh_objects.append(mesh_object)
+
+    unified_object = _unify_into_single_mesh(name, mesh_objects, texture_image)
 
     try:
         for area in bpy.context.screen.areas:
@@ -1152,7 +1202,8 @@ def finalize_and_export(name: str, texture_image: bpy.types.Image) -> None:
         bpy.ops.export_scene.fbx(filepath=FBX_OUTPUT_PATH, use_selection=False,
                                  path_mode='RELATIVE', embed_textures=False,
                                  axis_forward='-Z', axis_up='Y', global_scale=1.0,
-                                 apply_scale_options='FBX_SCALE_NONE',
+                                 apply_unit_scale=True,
+                                 apply_scale_options='FBX_SCALE_ALL',
                                  use_mesh_modifiers=True, bake_anim=False,
                                  object_types={'MESH'})
         print("FBX saved: " + FBX_OUTPUT_PATH)
