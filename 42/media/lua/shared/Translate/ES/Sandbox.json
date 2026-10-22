@@ -24,6 +24,8 @@
 
     "Sandbox_KnoxAirSupport_LootQuantity": "Cantidad de botín",
     "Sandbox_KnoxAirSupport_LootQuantity_tooltip": "Número máximo de objetos dentro de una caja.",
+    "Sandbox_KnoxAirSupport_LootQuantityMin": "Cantidad mínima de botín",
+    "Sandbox_KnoxAirSupport_LootQuantityMin_tooltip": "Número mínimo de objetos dentro de una caja. La cantidad real se sortea entre este valor y el máximo.",
 
     "Sandbox_KnoxAirSupport_CrateCapacity": "Capacidad de la caja",
     "Sandbox_KnoxAirSupport_CrateCapacity_tooltip": "Huecos que caben en la caja (una caja militar grande ronda los 75). Cada objeto ocupa al menos un hueco.",
