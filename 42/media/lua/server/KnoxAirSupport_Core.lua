@@ -9,7 +9,9 @@ if isClient() then return end
 ---@class KnoxAirSupportServer
 ---@field config table<string,any>|nil
 ---@field activeEvent table|nil
+---@field handlers table<string,function>
 KnoxAirSupport_Server = KnoxAirSupport_Server or {}
+KnoxAirSupport_Server.handlers = KnoxAirSupport_Server.handlers or {}
 
 ---@type integer
 local lastEventEndTime = 0
@@ -139,7 +141,7 @@ local function endEvent(keepCrate)
     end
 
     KnoxAirSupport_Server.activeEvent = nil
-    lastEventEndTime = getTimestampMs()
+    lastEventEndTime = KnoxAirSupport.RealTimeMs()
     KnoxAirSupport.Broadcast(KnoxAirSupport.CMD_EVENT_END, {})
     print(KnoxAirSupport.TAG .. " === EVENT ENDED ===")
 end
@@ -148,7 +150,50 @@ end
 ---@return nil
 local function scheduleNextEvent()
     local config = KnoxAirSupport_Server.GetConfig()
-    nextEventTime = getTimestampMs() + (config.eventFrequency * 60000)
+    nextEventTime = KnoxAirSupport.RealTimeMs() + (config.eventFrequency * 60000)
+end
+
+--- Picks the landing zone of a drop, preferring towns and busy areas.
+---@param config table<string,any>
+---@return number, number
+local function pickDropLocation(config)
+    local centerX, centerY = playerCentroid()
+    if not centerX then return nil, nil end
+
+    local minDistance = config.minDistance
+    local maxDistance = config.maxDistance
+    if maxDistance <= minDistance then maxDistance = minDistance + 100 end
+
+    local metaGrid = getWorld() and getWorld():getMetaGrid() or nil
+    local bestX, bestY, bestScore = nil, nil, -1
+
+    for attempt = 1, 8 do
+        local angle = ZombRand(360) * math.pi / 180
+        local distance = minDistance + ZombRand(maxDistance - minDistance + 1)
+        local x = math.floor(centerX + math.cos(angle) * distance)
+        local y = math.floor(centerY + math.sin(angle) * distance)
+
+        local score = ZombRand(5)
+        if metaGrid then
+            local ok, zones = pcall(function() return metaGrid:getZonesAt(x, y, 0) end)
+            if ok and zones then
+                for i = 0, zones:size() - 1 do
+                    local zone = zones:get(i)
+                    if zone and zone.getType and zone:getType() == "TownZone" then
+                        score = score + 50
+                        break
+                    end
+                end
+            end
+        end
+
+        if score > bestScore then
+            bestScore = score
+            bestX, bestY = x, y
+        end
+    end
+
+    return bestX, bestY
 end
 
 --- Announces a new supply drop event.
@@ -169,25 +214,18 @@ local function startEvent(eventTypeId, explicitX, explicitY)
     if explicitX and explicitY then
         x, y = math.floor(explicitX), math.floor(explicitY)
     else
-        local centerX, centerY = playerCentroid()
-        if not centerX then
+        x, y = pickDropLocation(config)
+        if not x then
             print(KnoxAirSupport.TAG .. " No players online, skipping drop")
             return
         end
-        local minDistance = config.minDistance
-        local maxDistance = config.maxDistance
-        if maxDistance <= minDistance then maxDistance = minDistance + 100 end
-        local angle = ZombRand(360) * math.pi / 180
-        local distance = minDistance + ZombRand(maxDistance - minDistance + 1)
-        x = math.floor(centerX + math.cos(angle) * distance)
-        y = math.floor(centerY + math.sin(angle) * distance)
     end
 
     KnoxAirSupport_Server.activeEvent = {
         x = x,
         y = y,
         eventType = eventType,
-        startTime = getTimestampMs(),
+        startTime = KnoxAirSupport.RealTimeMs(),
         spawned = false,
         crateObj = nil,
     }
@@ -203,6 +241,21 @@ local function startEvent(eventTypeId, explicitX, explicitY)
     })
 end
 
+--- Returns true when a player is standing on the given square.
+---@param square IsoGridSquare
+---@return boolean
+local function playerOnSquare(square)
+    local occupied = false
+    KnoxAirSupport.ForEachPlayer(function(player)
+        if not occupied
+            and math.floor(player:getX()) == square:getX()
+            and math.floor(player:getY()) == square:getY() then
+            occupied = true
+        end
+    end)
+    return occupied
+end
+
 --- Materialises the crate once a player is close enough to the landing zone.
 ---@return nil
 local function trySpawnDrop()
@@ -210,14 +263,36 @@ local function trySpawnDrop()
     if not event or event.spawned then return end
 
     local config = KnoxAirSupport_Server.GetConfig()
-    local square, squareX, squareY = KnoxAirSupport.FindSpawnSquare(event.x, event.y, 25)
+    local square, squareX, squareY = KnoxAirSupport.FindSpawnSquare(event.x, event.y, 25, playerOnSquare)
 
     if not square then
         noSquareWarnings = noSquareWarnings + 1
         if noSquareWarnings % 30 == 1 then
-            print(KnoxAirSupport.TAG .. " No valid landing tile near " .. event.x .. ", " .. event.y .. " - retrying")
+            print(KnoxAirSupport.TAG .. " No valid landing tile near " .. event.x .. ", " .. event.y
+                .. " - waiting for the area to load and retrying")
         end
-        return
+
+        if noSquareWarnings >= 3 then
+            local nearby = nil
+            KnoxAirSupport.ForEachPlayer(function(p) nearby = nearby or p end)
+            if nearby then
+                local fallbackSquare, fallbackX, fallbackY =
+                    KnoxAirSupport.FindSpawnSquare(nearby:getX(), nearby:getY(), 30, playerOnSquare)
+                if fallbackSquare then
+                    print(KnoxAirSupport.TAG .. " Relocating the drop to " .. fallbackX .. ", " .. fallbackY)
+                    event.x, event.y = fallbackX, fallbackY
+                    KnoxAirSupport.Broadcast(KnoxAirSupport.CMD_EVENT_START, {
+                        x = fallbackX,
+                        y = fallbackY,
+                        name = event.eventType and event.eventType.name or "Supply Drop",
+                        eventType = event.eventType and event.eventType.id or nil,
+                    })
+                    square, squareX, squareY = fallbackSquare, fallbackX, fallbackY
+                end
+            end
+        end
+
+        if not square then return end
     end
 
     local eventType = event.eventType or KnoxAirSupport.PickEventType()
@@ -229,7 +304,7 @@ local function trySpawnDrop()
 
     event.x, event.y = squareX, squareY
     event.crateObj = crate
-    event.crateEntry = { obj = crate, spawnedAt = getTimestampMs(), x = squareX, y = squareY }
+    event.crateEntry = { obj = crate, spawnedAt = KnoxAirSupport.RealTimeMs(), x = squareX, y = squareY }
     event.spawned = true
     noSquareWarnings = 0
     crateList[#crateList + 1] = event.crateEntry
@@ -292,7 +367,7 @@ local function onEveryMinute()
     local config = KnoxAirSupport_Server.GetConfig()
     if not config.enabled then return end
 
-    local now = getTimestampMs()
+    local now = KnoxAirSupport.RealTimeMs()
 
     local lifetime = tonumber(config.despawnTimer) or 0
     if lifetime > 0 then
@@ -349,7 +424,7 @@ local function onClientCommand(module, command, player, args)
             elseif key == "spawnRadius" then value = KnoxAirSupport.Clamp(value, 10, 600)
             elseif key == "guardianCount" then value = KnoxAirSupport.Clamp(value, 0, 30)
             elseif key == "lootQuantity" then value = KnoxAirSupport.Clamp(value, 1, 60)
-            elseif key == "crateCapacity" then value = KnoxAirSupport.Clamp(value, 10, 200)
+            elseif key == "crateCapacity" then value = KnoxAirSupport.Clamp(value, 10, 50)
             elseif key == "priorityChance" then value = KnoxAirSupport.Clamp(value, 0, 100)
             elseif key == "enabled" or key == "int_bandits" or key == "int_marz"
                 or key == "int_snake" or key == "int_zombies" or key == "int_alife"
@@ -386,7 +461,7 @@ local function onClientCommand(module, command, player, args)
 
     elseif command == KnoxAirSupport.CMD_DISMANTLE then
         local ok, done = pcall(function()
-            return KnoxAirSupport.DismantleCrate(args.x, args.y, args.z, player)
+            return KnoxAirSupport.DismantleCrate(args.x, args.y, args.z, player, args.inventory)
         end)
         if not ok then
             print(KnoxAirSupport.TAG .. " ERROR dismantling crate: " .. tostring(done))
@@ -445,7 +520,7 @@ end
 local function bootstrap()
     local config = KnoxAirSupport_Server.GetConfig()
     KnoxAirSupport.Integrations.Detect()
-    lastEventEndTime = getTimestampMs()
+    lastEventEndTime = KnoxAirSupport.RealTimeMs()
     nextEventTime = lastEventEndTime + (config.eventFrequency * 60000)
     print(KnoxAirSupport.TAG .. " Server module loaded")
 end
@@ -457,11 +532,19 @@ if isServer() then
 end
 
 if Events.EveryOneMinute then
+    if KnoxAirSupport_Server.handlers.everyOneMinute then
+        Events.EveryOneMinute.Remove(KnoxAirSupport_Server.handlers.everyOneMinute)
+    end
+    KnoxAirSupport_Server.handlers.everyOneMinute = onEveryMinute
     Events.EveryOneMinute.Add(onEveryMinute)
 else
     print(KnoxAirSupport.TAG .. " WARNING: Events.EveryOneMinute not available, using the tick instead")
 end
 
 if Events.OnTick then
+    if KnoxAirSupport_Server.handlers.onTick then
+        Events.OnTick.Remove(KnoxAirSupport_Server.handlers.onTick)
+    end
+    KnoxAirSupport_Server.handlers.onTick = onTick
     Events.OnTick.Add(onTick)
 end
