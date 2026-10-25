@@ -36,6 +36,9 @@ local function readStoredConfig()
         local readOk = pcall(function() value = modData[key] end)
         if readOk and value ~= nil then stored[key] = value end
     end
+    local version = nil
+    local versionOk = pcall(function() version = modData.configVersion end)
+    stored.configVersion = (versionOk and tonumber(version)) or 1
     return stored
 end
 
@@ -48,6 +51,18 @@ local function writeStoredConfig(config)
     for _, key in ipairs(KnoxAirSupport.CONFIG_KEYS) do
         pcall(function() modData[key] = config[key] end)
     end
+    pcall(function() modData.configVersion = KnoxAirSupport.CONFIG_VERSION end)
+    pcall(function() ModData.transmit(KnoxAirSupport.CONFIG_TABLE) end)
+end
+
+--- Marks the stored configuration as migrated and optionally fixes a value.
+---@param frequency integer|nil
+---@return nil
+local function writeMigration(frequency)
+    local ok, modData = pcall(function() return ModData.getOrCreate(KnoxAirSupport.CONFIG_TABLE) end)
+    if not ok or not modData then return end
+    if frequency then pcall(function() modData.eventFrequency = frequency end) end
+    pcall(function() modData.configVersion = KnoxAirSupport.CONFIG_VERSION end)
     pcall(function() ModData.transmit(KnoxAirSupport.CONFIG_TABLE) end)
 end
 
@@ -56,10 +71,22 @@ end
 function KnoxAirSupport_Server.GetConfig()
     local config = KnoxAirSupport.ConfigFromSandbox()
     local stored = readStoredConfig()
+    local storedVersion = 1
     if stored then
+        storedVersion = tonumber(stored.configVersion) or 1
+        stored.configVersion = nil
         for key, value in pairs(stored) do
             config[key] = value
         end
+    end
+    if storedVersion < KnoxAirSupport.CONFIG_VERSION then
+        local migratedFrequency = nil
+        if tonumber(config.eventFrequency) == 15 then
+            config.eventFrequency = 45
+            migratedFrequency = 45
+            print(KnoxAirSupport.TAG .. " Config migrated: event frequency 15 -> 45 minutes")
+        end
+        writeMigration(migratedFrequency)
     end
     KnoxAirSupport_Server.config = config
     return config
