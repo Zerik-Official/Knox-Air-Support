@@ -13,6 +13,7 @@ KnoxAirSupport = KnoxAirSupport or {}
 KnoxAirSupport.MOD_ID = "KnoxAirSupport"
 KnoxAirSupport.TAG = "[KnoxAirSupport]"
 KnoxAirSupport.CONFIG_TABLE = "KnoxAirSupport"
+KnoxAirSupport.CONFIG_VERSION = 2
 
 ---@type string
 KnoxAirSupport.CMD_EVENT_START = "EventStart"
@@ -137,7 +138,7 @@ end
 function KnoxAirSupport.DefaultConfig()
     return {
         enabled = true,
-        eventFrequency = 15,
+        eventFrequency = 45,
         despawnTimer = 0,
         minDistance = 200,
         maxDistance = 800,
