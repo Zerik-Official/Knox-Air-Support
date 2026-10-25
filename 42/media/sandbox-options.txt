@@ -13,7 +13,7 @@ option KnoxAirSupport.EventFrequency
     type = integer,
     min = 1,
     max = 1440,
-    default = 15,
+    default = 45,
     page = KnoxAirSupport,
     translation = KnoxAirSupport_EventFrequency,
 }
