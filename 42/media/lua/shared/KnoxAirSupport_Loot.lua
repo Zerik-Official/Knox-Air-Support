@@ -299,6 +299,76 @@ local function fillMagazine(item)
     pcall(function() item:setCurrentAmmoCount(maxAmmo) end)
 end
 
+---@type table<string,string>[]
+local AMMO_BOX_ROUNDS = {
+    { "9mm", "Base.Bullets9mm" },
+    { "308", "Base.308Bullets" },
+    { "556", "Base.556Bullets" },
+    { "3030", "Base.3030Bullets" },
+    { "357", "Base.Bullets357" },
+    { "44", "Base.Bullets44" },
+    { "45", "Base.Bullets45" },
+    { "38", "Base.Bullets38" },
+    { "shotgun", "Base.ShotgunShells" },
+    { "hunting", "Base.308Bullets" },
+}
+
+---@type string[]
+local ROUND_TYPES = {
+    "Base.Bullets9mm", "Base.Bullets45", "Base.Bullets44", "Base.Bullets38",
+    "Base.Bullets357", "Base.308Bullets", "Base.556Bullets",
+    "Base.3030Bullets", "Base.ShotgunShells",
+}
+
+--- Reads the loose round item type of an ammunition case.
+---@param fullType string
+---@return string|nil
+local function ammoTypeForAmmoBox(fullType)
+    local lower = fullType:lower()
+    for _, entry in ipairs(AMMO_BOX_ROUNDS) do
+        if lower:find(entry[1], 1, true) then return entry[2] end
+    end
+    return nil
+end
+
+--- Fills an ammunition case with loose rounds.
+--- Cases with a known caliber receive that caliber, the rest receive a mix.
+---@param box InventoryItem
+---@return integer
+function KnoxAirSupport.Loot.FillAmmoBox(box)
+    local tagOk, isAmmoCase = pcall(function() return box:hasTag(ItemTag.AMMO_CASE) end)
+    if not tagOk or not isAmmoCase then return 0 end
+
+    local containerOk, ammoContainer = pcall(function() return box:getItemContainer() end)
+    if not containerOk or not ammoContainer then return 0 end
+    pcall(function() ammoContainer:setExplored(true) end)
+
+    local typeOk, fullType = pcall(function() return box:getFullType() end)
+    local ammoType = nil
+    if typeOk and type(fullType) == "string" then
+        ammoType = ammoTypeForAmmoBox(fullType)
+    end
+
+    local capacity = 6
+    local capacityOk, value = pcall(function() return ammoContainer:getCapacity() end)
+    if capacityOk and value and value > 0 then capacity = value end
+
+    local low = math.min(capacity, math.max(2, math.floor(capacity / 2)))
+    local high = math.max(low, capacity)
+    local stacks = ZombRand(low, high + 1)
+
+    local added = 0
+    for _ = 1, stacks do
+        local roundType = ammoType
+        if not roundType then
+            roundType = ROUND_TYPES[ZombRand(1, #ROUND_TYPES + 1)]
+        end
+        if ammoContainer:AddItem(roundType) then added = added + 1 end
+    end
+
+    return added
+end
+
 --- Adds the matching ammunition boxes and filled magazines of a firearm.
 --- Melee weapons have no ammunition, so they add nothing.
 ---@param container ItemContainer
@@ -387,6 +457,7 @@ function KnoxAirSupport.Loot.FillContainer(container, eventTypeId, config)
                         pcall(function() item:setCondition(category.condition) end)
                     end
                     fillMagazine(item)
+                    KnoxAirSupport.Loot.FillAmmoBox(item)
                     local room = capacity - added - extras
                     if room > 0 then
                         extras = extras + KnoxAirSupport.Loot.SupplyWeapon(container, item, math.min(4, room))
