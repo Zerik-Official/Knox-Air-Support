@@ -69,10 +69,11 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
         {
             id = "hand_tools", min = 1, max = 3,
             items = {
-                "Base.Hammer", "Base.HammerForged", "Base.BallPeenHammer", "Base.Saw",
+                "Base.Hammer", "Base.HammerForged", "Base.BallPeenHammer", "Base.BallPeenHammerForged", "Base.Saw",
                 "Base.SmallSaw", "Base.GardenSaw", "Base.Screwdriver", "Base.Screwdriver_Old",
                 "Base.Wrench", "Base.PipeWrench", "Base.Crowbar", "Base.Shovel",
                 "Base.Axe", "Base.Sledgehammer", "Base.CircularSawblade", "Base.HacksawBlade",
+                "Base.PickAxe", "Base.PickAxeForged",
                 "Base.Pliers", "Base.Multitool", "Base.Jack",
             },
         },
@@ -108,20 +109,25 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
         {
             id = "firearms", min = 0, max = 2,
             items = {
-                "Base.Pistol", "Base.Pistol2", "Base.Pistol3", "Base.Revolver",
-                "Base.Revolver_Long", "Base.Shotgun", "Base.ShotgunSawnoff",
-                "Base.DoubleBarrelShotgun", "Base.HuntingRifle", "Base.VarmintRifle",
-                "Base.AssaultRifle", "Base.AssaultRifle2", "Base.DoubleBarrelShotgun",
+                "Base.Pistol", "Base.Pistol2", "Base.Pistol3",
+                "Base.Revolver", "Base.Revolver_Long", "Base.Revolver_Short",
+                "Base.Shotgun", "Base.ShotgunSawnoff", "Base.DoubleBarrelShotgun",
+                "Base.DoubleBarrelShotgunSawnoff", "Base.HuntingRifle", "Base.VarmintRifle",
+                "Base.TrapperCarbine", "Base.L92_Carbine", "Base.L94_Rifle",
+                "Base.MSR7T_Rifle", "Base.JS14_Rifle", "Base.JS3T_Shotgun",
+                "Base.AssaultRifle", "Base.AssaultRifle2",
             },
         },
         {
             id = "ammunition", min = 1, max = 3,
             items = {
                 "Base.Bullets9mmBox", "Base.Bullets45Box", "Base.Bullets38Box", "Base.308Box",
-                "Base.Bullets357Box", "Base.556Box", "Base.ShotgunShellsBox", "Base.9mmClip",
-                "Base.45Clip", "Base.556Clip", "Base.Bullets44Box", "Base.Bullets9mmCarton",
+                "Base.Bullets357Box", "Base.556Box", "Base.ShotgunShellsBox", "Base.3030Box",
+                "Base.Bullets44Box", "Base.9mmClip", "Base.45Clip", "Base.44Clip",
+                "Base.556Clip", "Base.M14Clip", "Base.Bullets9mmCarton",
                 "Base.Bullets45Carton", "Base.Bullets38Carton", "Base.Bullets357Carton",
-                "Base.308Carton", "Base.556Carton", "Base.ShotgunShellsCarton",
+                "Base.Bullets44Carton", "Base.308Carton", "Base.556Carton",
+                "Base.ShotgunShellsCarton", "Base.3030Carton",
             },
         },
         {
@@ -131,6 +137,8 @@ KnoxAirSupport.Loot.DROP_CATEGORIES = {
                 "Base.Bag_AmmoBox_44", "Base.Bag_AmmoBox_38", "Base.Bag_AmmoBox_ShotgunShells",
                 "Base.Bag_AmmoBox", "Base.Bag_ProtectiveCaseBulkyAmmo_9mm",
                 "Base.Bag_ProtectiveCaseBulkyAmmo_308", "Base.Bag_ProtectiveCaseBulkyAmmo_45",
+                "Base.Bag_ProtectiveCaseBulkyAmmo_44", "Base.Bag_ProtectiveCaseBulkyAmmo_38",
+                "Base.Bag_ProtectiveCaseBulkyAmmo_ShotgunShells", "Base.Bag_ProtectiveCaseBulkyAmmo_556",
             },
         },
         {
@@ -237,10 +245,101 @@ function KnoxAirSupport.Loot.PickUnique(items, count)
     return picked
 end
 
+--- Reads the magazine item type of a firearm.
+---@param weapon InventoryItem
+---@return string|nil
+local function getMagazineType(weapon)
+    local ok, value = pcall(function() return weapon:getMagazineType() end)
+    if ok and type(value) == "string" and value ~= "" then return value end
+    return nil
+end
+
+--- Builds a full item type out of a script reference.
+--- The engine may return the ammo box name without its module, so the module
+--- of the weapon is used as a fallback.
+---@param value string|nil
+---@param weapon InventoryItem
+---@return string|nil
+local function resolveItemType(value, weapon)
+    if not value or value == "" then return nil end
+    if value:find("%.") then return value end
+    if value:find(":") then return (value:gsub(":", ".", 1)) end
+
+    local ok, fullType = pcall(function() return weapon:getFullType() end)
+    if not ok or type(fullType) ~= "string" then return nil end
+
+    local module = fullType:match("^([^%.]+)%.") or fullType:match("^([^:]+):")
+    if not module then return nil end
+    return module .. "." .. value
+end
+
+--- Reads the ammunition box item type of a firearm.
+---@param weapon InventoryItem
+---@return string|nil
+local function getAmmoBoxType(weapon)
+    local ok, value = pcall(function() return weapon:getAmmoBox() end)
+    if ok then return resolveItemType(value, weapon) end
+    return nil
+end
+
+--- Fills a magazine with its maximum ammunition.
+--- Weapons and items without ammunition are left untouched.
+---@param item InventoryItem
+---@return nil
+local function fillMagazine(item)
+    local weaponOk, isWeapon = pcall(function() return item:isItemType(ItemType.WEAPON) end)
+    if weaponOk and isWeapon then return end
+
+    local ammoOk, ammoType = pcall(function() return item:getAmmoType() end)
+    if not ammoOk or not ammoType then return end
+
+    local maxOk, maxAmmo = pcall(function() return item:getMaxAmmo() end)
+    if not maxOk or not maxAmmo or maxAmmo <= 0 then return end
+
+    pcall(function() item:setCurrentAmmoCount(maxAmmo) end)
+end
+
+--- Adds the matching ammunition boxes and filled magazines of a firearm.
+--- Melee weapons have no ammunition, so they add nothing.
+---@param container ItemContainer
+---@param weapon InventoryItem
+---@param budget integer
+---@return integer
+function KnoxAirSupport.Loot.SupplyWeapon(container, weapon, budget)
+    local added = 0
+    if budget <= 0 then return added end
+
+    local ammoBox = getAmmoBoxType(weapon)
+    if ammoBox then
+        local boxes = ZombRand(1, 3)
+        for _ = 1, boxes do
+            if added >= budget then break end
+            if container:AddItem(ammoBox) then added = added + 1 end
+        end
+    end
+
+    local magazineType = getMagazineType(weapon)
+    if magazineType then
+        local magazines = ZombRand(1, 3)
+        for _ = 1, magazines do
+            if added >= budget then break end
+            local magazine = container:AddItem(magazineType)
+            if magazine then
+                added = added + 1
+                fillMagazine(magazine)
+            end
+        end
+    end
+
+    return added
+end
+
 --- Fills a container with the categories of an event type.
 --- The amount of items is random between the configured minimum and maximum, and
 --- the categories are rolled until that amount is reached. Every item type can
---- appear twice at most, so the crate keeps some variety.
+--- appear twice at most, so the crate keeps some variety. Firearms also bring
+--- their matching ammunition boxes and filled magazines as extra items, which
+--- never exceed the configured crate capacity.
 ---@param container ItemContainer
 ---@param eventTypeId string
 ---@param config table<string,any>
@@ -255,14 +354,15 @@ function KnoxAirSupport.Loot.FillContainer(container, eventTypeId, config)
     local target = ZombRand(minItems, maxItems + 1)
     local copies = {}
     local added = 0
+    local extras = 0
     local rounds = 0
 
-    while added < target and rounds < 12 do
+    while added < target and (added + extras) < capacity and rounds < 12 do
         rounds = rounds + 1
         local progress = false
 
         for _, category in ipairs(categories) do
-            if added >= target then break end
+            if added >= target or (added + extras) >= capacity then break end
 
             local available = {}
             for _, itemType in ipairs(category.items) do
@@ -277,7 +377,7 @@ function KnoxAirSupport.Loot.FillContainer(container, eventTypeId, config)
             if count > #available then count = #available end
 
             for _, itemType in ipairs(KnoxAirSupport.Loot.PickUnique(available, count)) do
-                if added >= target then break end
+                if added >= target or (added + extras) >= capacity then break end
                 local item = container:AddItem(itemType)
                 if item then
                     added = added + 1
@@ -285,6 +385,11 @@ function KnoxAirSupport.Loot.FillContainer(container, eventTypeId, config)
                     copies[itemType] = (copies[itemType] or 0) + 1
                     if category.condition and item.setCondition then
                         pcall(function() item:setCondition(category.condition) end)
+                    end
+                    fillMagazine(item)
+                    local room = capacity - added - extras
+                    if room > 0 then
+                        extras = extras + KnoxAirSupport.Loot.SupplyWeapon(container, item, math.min(4, room))
                     end
                 end
             end
